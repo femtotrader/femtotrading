@@ -2,12 +2,8 @@
 
 import datetime
 import decimal
-from enum import Enum
 
 from ..utils import EPOCH
-
-
-DataIteratorType = Enum("DataIteratorType", "TICK BAR")
 
 
 class DefaultDataParser(object):
@@ -99,9 +95,11 @@ class AbstractTickDataIterator(AbstractDataIterator):
     AbstractDataIterator is base class providing an interface for all subsequent
     (inherited) tick data (price) events
     """
-    @property
-    def type(self):
-        return DataIteratorType.TICK
+    def is_tick(self):
+        return True
+
+    def is_bar(self):
+        return False
 
 
 class AbstractBarDataIterator(AbstractDataIterator):
@@ -109,6 +107,8 @@ class AbstractBarDataIterator(AbstractDataIterator):
     AbstractDataIterator is base class providing an interface for all subsequent
     (inherited) bar data (price) events
     """
-    @property
-    def type(self):
-        return DataIteratorType.BAR
+    def is_tick(self):
+        return False
+
+    def is_bar(self):
+        return True

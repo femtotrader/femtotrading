@@ -4,17 +4,18 @@ import click
 
 from decimal import Decimal
 
+from femtotrading import settings
 from femtotrading.event import EventsQueue
 from femtotrading.data_iterator import HistoricCSVTickIterator
-from femtotrading.trading_session import Backtest
-from femtotrading.execution_handler import IBSimulatedExecutionHandler
-from femtotrading.portfolio_handler import PortfolioHandler
+from femtotrading.strategy import ExampleStrategy
+from femtotrading.strategy import Strategies, DisplayStrategy
 from femtotrading.position_sizer import FixedQuantityPositionSizer
 from femtotrading.risk_manager import ExampleRiskManager
-from femtotrading.statistics import SimpleStatistics
+from femtotrading.portfolio_handler import PortfolioHandler
 from femtotrading.compliance import ExampleCompliance
-from femtotrading import settings
-from femtotrading.strategy import ExampleStrategy
+from femtotrading.execution_handler import IBSimulatedExecutionHandler
+from femtotrading.statistics import SimpleStatistics
+from femtotrading.trading_session import Backtest
 
 
 def run(config, testing, tickers):
@@ -29,7 +30,9 @@ def run(config, testing, tickers):
     price_handler = HistoricCSVTickIterator(csv_dir, tickers)
 
     # Use the Example Strategy
-    strategy = ExampleStrategy(events_queue, tickers)
+    strategy1 = ExampleStrategy(events_queue, tickers)
+    strategy2 = DisplayStrategy(events_queue, tickers, n=1)
+    strategy = Strategies(strategy1, strategy2)
 
     # Use an example Position Sizer
     position_sizer = FixedQuantityPositionSizer(100)

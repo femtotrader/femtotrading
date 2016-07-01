@@ -8,6 +8,7 @@ from femtotrading import settings
 from femtotrading.event import EventsQueue
 from femtotrading.data_iterator import YahooDailyCSVBarIterator
 from femtotrading.strategy import MovingAverageCrossStrategy
+from femtotrading.strategy import Strategies, DisplayStrategy
 from femtotrading.position_sizer import FixedQuantityPositionSizer
 from femtotrading.risk_manager import ExampleRiskManager
 from femtotrading.portfolio_handler import PortfolioHandler
@@ -30,7 +31,9 @@ def run(config, testing, tickers):
     price_handler = YahooDailyCSVBarIterator(csv_dir, tickers)
 
     # Use the MAC Strategy
-    strategy = MovingAverageCrossStrategy(events_queue, tickers)
+    strategy1 = MovingAverageCrossStrategy(events_queue, tickers)
+    strategy2 = DisplayStrategy(events_queue, tickers, n=500)
+    strategy = Strategies(strategy1, strategy2)
 
     # Use an example Position Sizer,
     position_sizer = FixedQuantityPositionSizer(100)

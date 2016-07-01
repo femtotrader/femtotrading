@@ -7,7 +7,8 @@ from decimal import Decimal
 from femtotrading import settings
 from femtotrading.event import EventsQueue
 from femtotrading.data_iterator import YahooDailyCSVBarIterator
-from femtotrading.strategy import BuyAndHoldStrategy, PrintStrategy, Strategies
+from femtotrading.strategy import BuyAndHoldStrategy
+from femtotrading.strategy import Strategies, DisplayStrategy
 from femtotrading.position_sizer import FixedQuantityPositionSizer
 from femtotrading.risk_manager import ExampleRiskManager
 from femtotrading.portfolio_handler import PortfolioHandler
@@ -30,10 +31,8 @@ def run(config, testing, tickers):
 
     # Use the Buy and Hold Strategy
     strategy1 = BuyAndHoldStrategy(events_queue, tickers)
-    strategy2 = PrintStrategy(events_queue, tickers, n=500)
-    # strategy = Strategies(strategy1, strategy2)
-    strategy = strategy1
-    # ToFix: no trade occurs when 2 strategies are send to backtest!!!!
+    strategy2 = DisplayStrategy(events_queue, tickers, n=500)
+    strategy = Strategies(strategy1, strategy2)
 
     # Use an example Position Sizer
     position_sizer = FixedQuantityPositionSizer(100)

@@ -14,7 +14,7 @@ except(IOError, ImportError):
     print("Can't import pypandoc - using README.md without converting to RST")
     long_description = open('README.md').read()
 
-NAME = 'femtotrading'
+NAME = "femtotrading"
 with io.open(path.join(here, NAME, 'version.py'), 'rt', encoding='UTF-8') as f:
     exec(f.read())
 
@@ -83,7 +83,7 @@ setup(
     # project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
-    install_requires=['six', 'pandas', 'matplolib', 'seaborn', 'munch', 'yaml', 'click'],
+    install_requires=[],
 
     # List additional groups of dependencies here (e.g. development dependencies).
     # You can install these using the following syntax, for example:

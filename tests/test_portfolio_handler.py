@@ -7,12 +7,17 @@ import unittest
 from femtotrading.event import EventsQueue
 from femtotrading.event import FillEvent, OrderEvent, SignalEvent
 from femtotrading.portfolio_handler import PortfolioHandler
-from femtotrading.data_iterator.base import DataIteratorType
 
 
 class PriceHandlerMock(object):
     def __init__(self):
-        self.type = DataIteratorType.TICK
+        pass
+
+    def is_tick(self):
+        return True
+
+    def is_bar(self):
+        return False
 
     def get_best_bid_ask(self, ticker):
         prices = {

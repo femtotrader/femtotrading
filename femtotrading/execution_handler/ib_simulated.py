@@ -3,8 +3,7 @@
 from decimal import Decimal
 
 from .base import ExecutionHandler
-from ..event import (FillEvent, EventType)
-from ..data_iterator.base import DataIteratorType
+from ..event import FillEvent
 from ..exceptions import EmptyQuantityError
 
 
@@ -48,39 +47,38 @@ class IBSimulatedExecutionHandler(ExecutionHandler):
         Parameters:
         event - An Event object with order information.
         """
-        if event.isa(EventType.ORDER):
-            # Obtain values from the OrderEvent
-            ticker = event.ticker
-            # timestamp = datetime.datetime.utcnow()  # ToFix: see https://github.com/mhallsmoore/qstrader/issues/27
-            timestamp = self.data_iterator.get_timestamp(ticker)
-            action = event.action
-            if event.quantity == 0:
-                raise EmptyQuantityError
-            quantity = event.quantity
+        # Obtain values from the OrderEvent
+        ticker = event.ticker
+        # timestamp = datetime.datetime.utcnow()  # ToFix: see https://github.com/mhallsmoore/qstrader/issues/27
+        timestamp = self.data_iterator.get_timestamp(ticker)
+        action = event.action
+        if event.quantity == 0:
+            raise EmptyQuantityError
+        quantity = event.quantity
 
-            # Obtain the fill price
-            if self.data_iterator.isa(DataIteratorType.TICK):
-                bid, ask = self.data_iterator.get_best_bid_ask(ticker)
-                if event.action == "BOT":
-                    fill_price = Decimal(str(ask))
-                else:
-                    fill_price = Decimal(str(bid))
+        # Obtain the fill price
+        if self.data_iterator.is_tick():
+            bid, ask = self.data_iterator.get_best_bid_ask(ticker)
+            if event.action == "BOT":
+                fill_price = Decimal(str(ask))
             else:
-                close_price = self.data_iterator.get_last_close(ticker)
-                fill_price = Decimal(str(close_price))
+                fill_price = Decimal(str(bid))
+        else:
+            close_price = self.data_iterator.get_last_close(ticker)
+            fill_price = Decimal(str(close_price))
 
-            # Set a dummy exchange and calculate trade commission
-            exchange = "ARCA"
-            commission = self.calculate_ib_commission()
+        # Set a dummy exchange and calculate trade commission
+        exchange = "ARCA"
+        commission = self.calculate_ib_commission()
 
-            # Create the FillEvent and place on the events queue
-            fill_event = FillEvent(
-                timestamp, ticker,
-                action, quantity,
-                exchange, fill_price,
-                commission
-            )
-            self.events_queue.enqueue(fill_event)
+        # Create the FillEvent and place on the events queue
+        fill_event = FillEvent(
+            timestamp, ticker,
+            action, quantity,
+            exchange, fill_price,
+            commission
+        )
+        self.events_queue.enqueue(fill_event)
 
-            if self.compliance is not None:
-                self.compliance.record_trade(fill_event)
+        if self.compliance is not None:
+            self.compliance.record_trade(fill_event)

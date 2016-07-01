@@ -1,3 +1,4 @@
+__name__ = "femtotrading"
 __author__ = "Femto Trader"
 __copyright__ = "Copyright 2016"
 __license__ = "MIT"

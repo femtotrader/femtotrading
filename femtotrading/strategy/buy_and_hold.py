@@ -1,9 +1,7 @@
 #!/usr/bin/env/python
 
 from .base import AbstractStrategy
-from ..event import SignalEvent, EventType
-
-BAR = EventType.BAR
+from ..event import SignalEvent
 
 
 class BuyAndHoldStrategy(AbstractStrategy):

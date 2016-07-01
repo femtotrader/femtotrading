@@ -7,12 +7,11 @@ from .base import AbstractStrategy, StrategyParameters
 from ..profiling import s_speed
 
 
-class PrintStrategy(AbstractStrategy):
+class DisplayStrategy(AbstractStrategy):
     """
-    A print strategy
+    A strategy which display ticks / bars
 
     params:
-        event_type:
         n = 10000
         n_window = 5
     """
@@ -23,7 +22,7 @@ class PrintStrategy(AbstractStrategy):
     })
 
     def on_init(self):
-        super(PrintStrategy, self).on_init()
+        super(DisplayStrategy, self).on_init()
         self.i = 0
         self.t0 = time.time()
 

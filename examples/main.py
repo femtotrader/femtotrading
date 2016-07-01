@@ -7,7 +7,7 @@ from decimal import Decimal
 from femtotrading import settings
 from femtotrading.event import EventsQueue
 from femtotrading.data_iterator import MonthlyCSVTickIterator
-from femtotrading.strategy import (Strategies, PrintStrategy)
+from femtotrading.strategy import DisplayStrategy
 from femtotrading.position_sizer import FixedQuantityPositionSizer
 from femtotrading.risk_manager import ExampleRiskManager
 from femtotrading.portfolio_handler import PortfolioHandler
@@ -29,7 +29,7 @@ def run(config, testing, tickers, n, n_window):
     # Use Historic CSV Price iterator
     data_iterator = MonthlyCSVTickIterator(tickers, csv_dir, 2014, 1)
 
-    strategy = PrintStrategy(events_queue, tickers)
+    strategy = DisplayStrategy(events_queue, tickers)
     # strategy = Strategies(PrintStrategy(events_queue, tickers))
 
     # Use an example Position Sizer

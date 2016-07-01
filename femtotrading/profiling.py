@@ -9,5 +9,5 @@ def speed(ticks, t0):
 
 def s_speed(time_event, ticks, t0):
     sp = speed(ticks, t0)
-    s_typ = time_event.type.name
-    return "%d %s processed @ %f %s/s" % (ticks, s_typ + "S", sp, s_typ)
+    s_typ = time_event.typename
+    return "%d %s processed @ %f %s/s" % (ticks, s_typ + "s", sp, s_typ + "s")

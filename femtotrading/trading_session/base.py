@@ -1,11 +1,6 @@
 #!/usr/bin/env/python
 
-from enum import Enum
-
 from ..utils import EPOCH
-
-
-TradingSessionType = Enum("TradingSessionType", "BACKTEST PAPERTRADE LIVE")
 
 
 class TradingSession(object):
@@ -52,18 +47,18 @@ class TradingSession(object):
         results = self._run()
         return results
         # duration = timeit.timeit(self._run, number=1)
-        # print("%s executed in %.3fs" % (self.type.name, duration))
+        # print("%s executed in %.3fs" % (self.typename, duration))
 
     def _run(self):
         self._on_init()
         try:
             self._loop()
         except KeyboardInterrupt:
-            print("%s halt by KeyboardInterrupt" % self.type.name)
+            print("%s halt by KeyboardInterrupt" % self.typename)
         return self._on_deinit()
 
     def _on_init(self):
-        print("Running %s..." % self.type.name)
+        print("Running %s..." % self.typename)
         self.iters = 0
         self.ticks = 0
         self.bars = 0
@@ -72,7 +67,7 @@ class TradingSession(object):
         self.strategies.on_init()
 
     def _on_deinit(self):
-        print("End of %s..." % self.type.name)
+        print("End of %s..." % self.typename)
         self.strategies.on_deinit()
         results = self.statistics.get_results()
         print("Backtest complete.")
@@ -82,3 +77,10 @@ class TradingSession(object):
         if not self.testing:
             self.statistics.plot_results()
         return results
+
+    @property
+    def typename(self):
+        return self.__class__.__name__
+
+    def islive(self):
+        return self.islivetest() or self.islivetrade()

@@ -4,12 +4,17 @@ from decimal import Decimal
 import unittest
 
 from femtotrading.portfolio import Portfolio
-from femtotrading.data_iterator.base import DataIteratorType
 
 
 class PriceHandlerMock(object):
     def __init__(self):
-        self.type = DataIteratorType.TICK
+        pass
+
+    def is_tick(self):
+        return True
+
+    def is_bar(self):
+        return True
 
     def get_best_bid_ask(self, ticker):
         prices = {

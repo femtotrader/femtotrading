@@ -93,7 +93,7 @@ class Strategies(AbstractStrategy):
 
     def on_bar(self, event):
         for strategy in self._lst_strategies:
-            strategy.on_tick(event)
+            strategy.on_bar(event)
 
     def on_signal(self, event):
         for strategy in self._lst_strategies:
@@ -101,11 +101,11 @@ class Strategies(AbstractStrategy):
 
     def on_order(self, event):
         for strategy in self._lst_strategies:
-            strategy.on_signal(event)
+            strategy.on_order(event)
 
     def on_fill(self, event):
         for strategy in self._lst_strategies:
-            strategy.on_signal(event)
+            strategy.on_fill(event)
 
     def on_deinit(self):
         for strategy in self._lst_strategies:

@@ -3,8 +3,8 @@ Test scripts
 """
 import unittest
 
-from .. import settings
-from . import generate_simulated_prices
+from ..settings import TEST
+from .generate_simulated_prices import run as run_generate_simulated_prices
 
 
 class TestScripts(unittest.TestCase):
@@ -15,13 +15,13 @@ class TestScripts(unittest.TestCase):
         """
         Set up configuration.
         """
-        self.config = settings.TEST
+        self.config = TEST
 
     def test_generate_simulated_prices(self):
         """
         Test generate_simulated_prices
         """
-        generate_simulated_prices.run(
+        run_generate_simulated_prices(
             '',  # outdir
             'GOOG',  # ticker
             700,  # init_price

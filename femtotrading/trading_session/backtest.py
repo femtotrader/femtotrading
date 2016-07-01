@@ -2,7 +2,7 @@
 
 import time
 
-from .base import (TradingSession, TradingSessionType)
+from .base import TradingSession
 
 from ..event import (TickEvent, BarEvent, SignalEvent, OrderEvent, FillEvent)
 from ..debug import ensure_dt_increasing
@@ -14,10 +14,6 @@ class Backtest(TradingSession):
     Encapsulates the settings and components for
     carrying out an event-driven backtest.
     """
-    @property
-    def type(self):
-        return TradingSessionType.BACKTEST
-
     def _loop(self):
         """
         Carries out an infinite while loop that polls the
@@ -73,3 +69,15 @@ class Backtest(TradingSession):
             time.sleep(self.heartbeat)
             self.prev_time = self.cur_time
             # self.iters += 1  # while loop
+
+    @property
+    def isbacktest(self):
+        return True
+
+    @property
+    def islivetest(self):  # paper trade
+        return False
+
+    @property
+    def islivetrade(self):
+        return False

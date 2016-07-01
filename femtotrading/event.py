@@ -1,12 +1,7 @@
 #!/usr/bin/env/python
 
-from enum import Enum
-
 from .compat import queue
 from .data import Data, TickerData
-
-
-EventType = Enum("EventType", "TICK BAR SIGNAL ORDER FILL")
 
 
 class EventsQueue(object):
@@ -31,11 +26,8 @@ class AbstractEvent(object):
     trading infrastructure.
     """
     @property
-    def type(self):
-        raise NotImplementedError("Must be implemented")
-
-    def isa(self, type):
-        return self.type == type
+    def typename(self):
+        return self.__class__.__name__
 
 
 class AbstractTimedEvent(AbstractEvent):
@@ -51,7 +43,7 @@ class AbstractTimedEvent(AbstractEvent):
         self.data_event = data_event
 
     def __str__(self):
-        return "Time: %s, %s %s" % (self.time, self.type.name, self.data_event)
+        return "Time: %s, %s %s" % (self.time, self.typename, self.data_event)
 
     def __repr__(self):
         return str(self)
@@ -69,12 +61,8 @@ class TickEvent(AbstractTimedEvent):
     which is defined as a ticker symbol and associated best
     bid and ask from the top of the order book.
     """
-    @property
-    def type(self):
-        return EventType.TICK
-
     def __str__(self):
-        return "Time: %s, %s %s" % (self.time, self.type.name, self.data_event)
+        return "Time: %s, %s %s" % (self.time, self.typename, self.data_event)
 
     @classmethod
     def from_ticker(cls, dt, ticker, bid, ask):
@@ -99,12 +87,8 @@ class BarEvent(AbstractTimedEvent):
     def from_ticker(cls, dt, period, ticker, ticker_data):
         return BarEvent(dt, period, Data({ticker: ticker_data}))
 
-    @property
-    def type(self):
-        return EventType.BAR
-
     def __str__(self):
-        return "Time: %s, %s %s, %s" % (self.time, self.type.name, self.period, self.data_event)
+        return "Time: %s, %s %s, %s" % (self.time, self.typename, self.period, self.data_event)
 
     @classmethod
     def from_df(cls, dt, ticker, row):
@@ -136,10 +120,6 @@ class SignalEvent(AbstractEvent):
         self.ticker = ticker
         self.action = action
 
-    @property
-    def type(self):
-        return EventType.SIGNAL
-
     def __str__(self):
         format_str = "<%14s Ticker: '%s', Action: '%s'>" % (
             self.__class__.__name__, self.ticker, self.action
@@ -168,10 +148,6 @@ class OrderEvent(AbstractEvent):
         self.ticker = ticker
         self.action = action
         self.quantity = quantity
-
-    @property
-    def type(self):
-        return EventType.ORDER
 
     def __str__(self):
         format_str = "<%14s Ticker: '%s', Action: '%s', Quantity: %s>" % (
@@ -219,10 +195,6 @@ class FillEvent(AbstractEvent):
         self.exchange = exchange
         self.price = price
         self.commission = commission
-
-    @property
-    def type(self):
-        return EventType.FILL
 
     def __str__(self):
         format_str = "<%14s @ %s Ticker: '%s', Action: '%s', Quantity: %s, " \
